@@ -11,7 +11,7 @@ import './App.css';
 
 const MUSIC_URL = 'https://customer-assets.emergentagent.com/job_bowmouse-gifts/artifacts/x0opus9h_Giramille_-_Alecrim_Dourado.mp3';
 const GOOGLE_FORM_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQmYkdYhUl_UU_31cY0cvV207qxQJbzjP6M-JsC1rt8liRNu--1ppTKVz8lSUpv7OH9wE5fQEh_UI2G/pubhtml';
-initMercadoPago('TEST-5e57ffe6-7d58-4b63-a2eb-65ab2c3bf832');
+initMercadoPago('APP_USR-020146d6-8da0-44d6-90d7-bb9355be7ddd');
 
 const gifts = [
   { id: 1, name: 'Jogo de encaixe', price: 'R$ 50,00', icon: 'https://m.media-amazon.com/images/I/61NFQOTxNxL._AC_SX679_.jpg', qrcode:"/qrcodes/50.jpeg" },
