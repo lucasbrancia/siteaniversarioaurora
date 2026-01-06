@@ -125,21 +125,29 @@ const AudioPlayer = () => {
 const GiftCard = ({ gift }) => {
   const [showQR, setShowQR] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [preferenceId, setPreferenceId] = useState(null);
 
   const handleOpen = async () => {
     setShowQR(true);
     setConfirmed(false);
 
-    // Se quiser manter o QR Code Pix, ainda pode chamar o backend
     try {
-      const price = Number(gift.price.replace("R$", "").replace(".", "").replace(",", ".").trim());
-      const res = await fetch("/api/create_preference", ... {
+      const price = Number(
+        gift.price.replace("R$", "").replace(".", "").replace(",", ".").trim()
+      );
+
+      const res = await fetch("/api/create_preference", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: gift.id, name: gift.name, price }),
       });
+
       const data = await res.json();
       console.log("Preference criada:", data);
+
+      if (data.id) {
+        setPreferenceId(data.id); // guarda o preferenceId para usar no CardPayment
+      }
     } catch (error) {
       console.error("Erro ao criar preferência:", error);
     }
@@ -153,11 +161,11 @@ const GiftCard = ({ gift }) => {
         onClick={handleOpen}
       >
         <div className="mb-3 text-center">
-        <img
+          <img
             src={gift.icon}
             alt={gift.name}
             className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 mx-auto object-contain"
-            />
+          />
         </div>
         <h3 className="font-bold text-gray-900 text-center mb-2">{gift.name}</h3>
         <p className="text-pink-600 text-center text-lg">{gift.price}</p>
@@ -170,29 +178,34 @@ const GiftCard = ({ gift }) => {
           </DialogHeader>
 
           <div className="space-y-6 pb-6">
-            {/* QR Code Pix (simulação visual) */}
+            {/* QR Code Pix (visual) */}
             <div className="bg-gray-100 rounded-2xl p-8 flex items-center justify-center">
               <div className="bg-white p-4 rounded-xl">
                 <img
-                src={gift.qrcode}
-                alt={`QR Code para ${gift.name}`}
-                className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain mx-auto"
-                loading="lazy"
+                  src={gift.qrcode}
+                  alt={`QR Code para ${gift.name}`}
+                  className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain mx-auto"
+                  loading="lazy"
                 />
               </div>
             </div>
 
             {/* Checkout Transparente Mercado Pago */}
-            <CardPayment
-              initialization={{
-                amount: Number(gift.price.replace("R$", "").replace(".", "").replace(",", ".").trim()),
-              }}
-              customization={{ visual: { style: { theme: "default" } } }}
-              onSubmit={(param) => {
-                console.log("Dados do pagamento:", param);
-                setConfirmed(true);
-              }}
-            />
+            {preferenceId && (
+              <CardPayment
+                initialization={{
+                  amount: Number(
+                    gift.price.replace("R$", "").replace(".", "").replace(",", ".").trim()
+                  ),
+                  preferenceId: preferenceId, // agora conectado ao backend
+                }}
+                customization={{ visual: { style: { theme: "default" } } }}
+                onSubmit={(param) => {
+                  console.log("Dados do pagamento:", param);
+                  setConfirmed(true);
+                }}
+              />
+            )}
 
             {confirmed && (
               <div className="mt-4 text-center text-green-600 font-semibold">
