@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Music, MapPin, Gift, Calendar, Clock, Heart, ChevronDown, Pause, Play, ExternalLink } from 'lucide-react';
@@ -5,8 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Toaster, toast } from 'sonner';
 import { initMercadoPago, CardPayment } from "@mercadopago/sdk-react";
-import GiftCheckout from "./components/GiftCheckout";
-import CustomForm from "./CustomForm";
+import CustomForm from "@/components/CustomForm";
 import './App.css';
 
 const MUSIC_URL = 'https://customer-assets.emergentagent.com/job_bowmouse-gifts/artifacts/x0opus9h_Giramille_-_Alecrim_Dourado.mp3';
